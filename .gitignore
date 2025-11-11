@@ -1,0 +1,117 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Environment variables
+.env
+.env.*.local
+
+# Logs
+logs/
+*.log
+log.txt
+logs.txt
+*.log.*
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+lib-cov/
+coverage/
+.nyc_output/
+.grunt
+bower_components/
+.lock-wscript
+build/
+dist/
+tmp/
+temp/
+cache/
+.cache/
+.next/
+out/
+public/build/
+uploads/
+storage/
+data/
+coverage-final.json
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Debug
+.idea/
+.vscode/
+*.swp
+*.swo
+*.orig
+*.bak
+.DS_Store
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Mac system files
+*.DS_Store
+
+# Logs and output from PM2 or Nodemon
+pids/
+pms.json
+nodemon-debug.log
+
+# Ignore test coverage reports
+coverage/
+*.lcov
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+docker-compose.override.yml
+
+# Build tools output
+build/
+dist/
+tmp/
+.cache/
+
+# Firebase / AWS / GCP credentials
+firebase.json
+serviceAccountKey.json
+aws-credentials.json
+gcp-credentials.json
+
+# Miscellaneous
+*.tgz
+*.zip
+*.tar.gz
+
+# Local testing databases or data
+db.sqlite
+database.sqlite
+database/
+mongo-data/
+postgres-data/
+redis-data/
+
+# Lock files (optional, for cleaner dependency management)
+# Uncomment if you want to ignore all lockfiles
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
