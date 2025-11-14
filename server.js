@@ -9,6 +9,7 @@ const routeRoutes = require("./routes/routeRoutes");
 const walletRoutes = require("./routes/walletRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const authMiddleware = require("./middleware/auth");
+const chatRoutes = require("./routes/chatRoutes");
 require("./models/User");
 
 dotenv.config();
@@ -36,6 +37,7 @@ app.use("/api/deliveries", authMiddleware, deliveryRoutes);
 app.use("/api/notifications", authMiddleware, notificationRoutes);
 app.use("/api/routes", authMiddleware, routeRoutes);
 app.use("/api/wallet", authMiddleware, walletRoutes);
+app.use("/api/chats", authMiddleware, chatRoutes);  
 // In your main app.js or index.js, make sure you import all models
 // Health check
 app.get("/", (req, res) => {
