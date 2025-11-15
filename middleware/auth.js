@@ -20,6 +20,7 @@ module.exports = async function(req, res, next) {
         // For complete registration route, we allow temporary tokens
         if (req.path === '/register/complete' && decoded.step === 'verified_phone') {
             req.user = decoded;
+            console.log(req.user)
             return next();
         }
 

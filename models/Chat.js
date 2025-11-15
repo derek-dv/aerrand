@@ -38,7 +38,7 @@ const chatSchema = new mongoose.Schema(
       {
         userId: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "SenderReceiver",
+          ref: (doc) => doc.role === "driver" ? "Driver" : "SenderReceiver",
           required: true,
         },
         role: {
@@ -174,6 +174,7 @@ chatSchema.methods.getUnreadCount = function (userId) {
 };
 
 chatSchema.methods.isParticipant = function (userId) {
+  console.log(this.participants);
   return this.participants.some(
     (p) =>
       (p.userId._id ? p.userId._id.toString() : p.userId.toString()) ===
@@ -206,23 +207,43 @@ chatSchema.statics.createOrFindChat = async function (
   }).populate("participants.userId", "fullName email profilePhoto role");
 
   if (existingChat) return existingChat;
+  console.log("No existing chat found, creating new chat.");
 
-  const User = mongoose.model("SenderReceiver");
-  const [user1, user2] = await Promise.all([
-    User.findById(user1Id).select("fullName role"),
-    User.findById(user2Id).select("fullName role"),
-  ]);
+  // const User = mongoose.model("SenderReceiver");
+  const Sender = require("./senderReceiver");
+  const Driver = require("./Driver");
 
-  if (!user1 || !user2) throw new Error("One or both users not found");
+  // Removed the unused Promise.all which attempted to set user1/user2 and caused
+  // a redeclaration error; use getUser below to resolve sender/driver per ID.
+
+  const driver = await Driver.findById(user1Id).select("name");
+  const sender = await Sender.findById(user2Id).select("fullName role");
+  if (!driver && !sender)
+    throw new Error(`One or both users not found`);
+  // const getUser = async (userId) => {
+  //   const sender = await Sender.findById(userId).select("fullName role");
+  //   if (sender) return { user: sender, role: sender.role };
+  //   const driver = await Driver.findById(userId).select("fullName role");
+  //   if (driver) return { user: driver, role: driver.role };
+  //   throw new Error(`User not found for ${userId}`);
+  // };
+
+  // const { user: user1, role: role1 } = await getUser(user1Id);
+  // const { user: user2, role: role2 } = await getUser(user2Id);
+
+  // if (!user1 || !user2) throw new Error("One or both users not found");
 
   const unreadCounts = new Map();
   unreadCounts.set(user1Id.toString(), 0);
   unreadCounts.set(user2Id.toString(), 0);
+  console.log("Creating new chat between:", driver, "and", sender);
+
+  console.log()
 
   const newChat = new this({
     participants: [
-      { userId: user1Id, role: user1.role },
-      { userId: user2Id, role: user2.role },
+      { userId: user1Id, role: "driver" },
+      { userId: user2Id, role: "customer" },
     ],
     deliveryId,
     chatType,
@@ -236,6 +257,8 @@ chatSchema.statics.createOrFindChat = async function (
     "participants.userId",
     "fullName email profilePhoto role"
   );
+
+  console.log(newChat)
 
   return newChat;
 };

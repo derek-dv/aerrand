@@ -5,6 +5,18 @@ const DriverSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  fullName: {
+    type: String,
+    required: true,
+    default: function() {
+      return `${this.firstName} ${this.lastName}`;
+    }
+  },
+  role: {
+    type: String,
+    enum: ['driver'],
+    default: 'driver'
+  },
   firstName: {
     type: String,
     required: true

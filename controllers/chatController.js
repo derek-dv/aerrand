@@ -8,8 +8,13 @@ const chatController = {
   // Create or get a chat between two users
   getOrCreateChat: async (req, res) => {
     try {
-      const user1Id = req.user._id; // logged-in user
+      console.log(req.user);
+      const user1Id = req.user.id; // logged-in user
       const { user2Id, deliveryId, chatType="delivery_related" } = req.body;
+      console.log('getOrCreateChat called with:', { user1Id, user2Id, deliveryId, chatType });
+
+      if (!isValidObjectId(user1Id))
+        return res.status(400).json({ success: false, message: 'Invalid user1Id' });
 
       if (!isValidObjectId(user2Id))
         return res.status(400).json({ success: false, message: 'Invalid user2Id' });
@@ -25,7 +30,7 @@ const chatController = {
   // Send a message in a chat
   sendMessage: async (req, res) => {
     try {
-      const userId = req.user._id;
+      const userId = req.user.id;
       const { chatId, message, messageType, imageUrl } = req.body;
 
       if (!isValidObjectId(chatId))
@@ -51,15 +56,15 @@ const chatController = {
   // Get messages for a chat
   getChatMessages: async (req, res) => {
     try {
-      const userId = req.user._id;
+      const userId = req.user.id;
       const { chatId } = req.params;
 
       if (!isValidObjectId(chatId))
         return res.status(400).json({ success: false, message: 'Invalid chatId' });
 
       const chat = await Chat.findById(chatId)
-        .populate('participants.userId', 'fullName email profilePhoto role')
-        .populate('messages.senderId', 'fullName email profilePhoto role');
+        // .populate('participants.userId', 'fullName email profilePhoto role')
+        // .populate('messages.senderId', 'fullName email profilePhoto role');
 
       if (!chat) return res.status(404).json({ success: false, message: 'Chat not found' });
 
@@ -76,7 +81,7 @@ const chatController = {
   // Mark messages as read
   markMessagesRead: async (req, res) => {
     try {
-      const userId = req.user._id;
+      const userId = req.user.id;
       const { chatId, messageIds } = req.body;
 
       if (!isValidObjectId(chatId))
@@ -101,7 +106,7 @@ const chatController = {
   // Get all chats for a user
   getUserChats: async (req, res) => {
     try {
-      const userId = req.user._id;
+      const userId = req.user.id;
       const { status, limit, skip, includeArchived } = req.query;
 
       const chats = await Chat.findForUser(userId, {
