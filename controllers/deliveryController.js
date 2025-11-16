@@ -531,7 +531,7 @@ const deliveryController = {
       
       // Step 8: Try with population (original query)
       const availableDeliveries = await Delivery.find({
-        status: 'upcoming',
+        // status: 'upcoming',
         $or: [
           { driverId: null },
           { driverId: { $exists: false } }
