@@ -531,13 +531,13 @@ const deliveryController = {
       
       // Step 8: Try with population (original query)
       const availableDeliveries = await Delivery.find({
-        // status: 'upcoming',
+        status: { $in: ['pending_payment', 'upcoming'] },
         $or: [
           { driverId: null },
           { driverId: { $exists: false } }
         ]
       })
-      .populate('senderId', 'fullName email') // This might fail if User model doesn't exist
+      .populate('senderId', 'fullName email')
       .sort({ createdAt: -1 });
 
       availableDeliveries.forEach((delivery, index) => {

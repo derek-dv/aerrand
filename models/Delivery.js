@@ -78,7 +78,7 @@ const deliverySchema = new mongoose.Schema({
   // Status field with 'upcoming' added
   status: {
     type: String,
-    enum: ['upcoming', 'pending', 'accepted', 'in-transit', 'completed', 'cancelled'],
+    enum: ['upcoming', 'pending', 'accepted', 'in-transit', 'completed', 'cancelled', 'pending_payment'],
     default: 'upcoming'
   },
   
