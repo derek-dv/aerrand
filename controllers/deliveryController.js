@@ -531,14 +531,15 @@ const deliveryController = {
       
       // Step 8: Try with population (original query)
       const availableDeliveries = await Delivery.find({
-        status: { $in: ['pending_payment', 'upcoming'] },
+        // status: 'upcoming',
         $or: [
           { driverId: null },
           { driverId: { $exists: false } }
         ]
       })
       .populate('senderId', 'fullName email')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 }) // sort by creation time (newest first), tie-break by _id
+      .lean();
 
       availableDeliveries.forEach((delivery, index) => {
         console.log(`Delivery ${index + 1}: ID=${delivery._id}, DriverId=${delivery.driverId}, Sender=${delivery.senderId ? delivery.senderId.name : 'N/A'}`)
