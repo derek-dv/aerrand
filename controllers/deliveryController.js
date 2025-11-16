@@ -658,7 +658,7 @@ const deliveryController = {
       const delivery = await Delivery.findOneAndUpdate(
         {
           _id: deliveryId,
-          status: 'upcoming',
+          // status: 'upcoming',
           $or: [
             { driverId: null },
             { driverId: { $exists: false } }
