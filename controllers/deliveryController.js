@@ -1,5 +1,5 @@
 const Delivery = require('../models/Delivery');
-require("../models/senderReceiver"); 
+const Sender = require("../models/senderReceiver"); 
 const Driver = require('../models/Driver');
 const mongoose = require('mongoose');
 const multer = require('multer');
@@ -537,8 +537,13 @@ const deliveryController = {
           { driverId: { $exists: false } }
         ]
       })
-      .populate('senderId', 'name email') // This might fail if User model doesn't exist
+      .populate('senderId', 'fullName email') // This might fail if User model doesn't exist
       .sort({ createdAt: -1 });
+
+      availableDeliveries.forEach((delivery, index) => {
+        console.log(`Delivery ${index + 1}: ID=${delivery._id}, DriverId=${delivery.driverId}, Sender=${delivery.senderId ? delivery.senderId.name : 'N/A'}`)
+      })
+
 
       console.log(`Found ${availableDeliveries.length} available deliveries with population`);
       
@@ -588,7 +593,7 @@ const deliveryController = {
         ],
         status: { $in: ['accepted', 'in-transit'] }
       })
-      .populate('senderId', 'name email phone');
+      .populate('senderId', 'fullName email phone');
   
       // Debug logging
       console.log('Active delivery found:', !!activeDelivery);
@@ -640,7 +645,7 @@ const deliveryController = {
       const existingActiveDelivery = await Delivery.findOne({
         driverId: driverId,
         status: { $in: ['accepted', 'in-transit'] }
-      });
+      }).populate('senderId', 'fullName email phone');
 
       if (existingActiveDelivery) {
         return res.status(400).json({
@@ -665,7 +670,7 @@ const deliveryController = {
         },
         { new: true }
       )
-      .populate('senderId', 'name email phone');
+      .populate('senderId', 'fullName email phone');
 
       if (!delivery) {
         return res.status(400).json({
@@ -733,7 +738,7 @@ const deliveryController = {
         },
         { new: true }
       )
-      .populate('senderId', 'name email phone');
+      .populate('senderId', 'fullName email phone');
 
       if (!delivery) {
         return res.status(400).json({
@@ -793,7 +798,7 @@ const deliveryController = {
         },
         { new: true }
       )
-      .populate('senderId', 'name email phone');
+      .populate('senderId', 'fullName email phone');
 
       if (!delivery) {
         return res.status(400).json({
@@ -839,7 +844,7 @@ const deliveryController = {
       const deliveries = await Delivery.find({
         driverId: driverId
       })
-      .populate('senderId', 'name email')
+      .populate('senderId', 'fullName email')
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
